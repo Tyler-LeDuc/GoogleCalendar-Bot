@@ -3,6 +3,7 @@ import datetime
 import pickle
 import os.path
 import sys
+from dateutil import parser
 # os.system("source env/bin/activate")
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -41,41 +42,28 @@ def main():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
+    summary = ' '.join(sys.argv[2:])
+    print(summary)
+
+    date = parser.parse(sys.argv[1]).strftime('%Y-%m-%d')
+    print(date)
 
     event = {
-      'summary': 'Google I/O 2015',
-      'location': '800 Howard St., San Francisco, CA 94103',
-      'description': 'A chance to hear more about Google\'s developer products.',
+      'summary': summary,
+      'location': '',
+      'description': '',
       'start': {
-        'dateTime': '2021-01-8T09:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
+        'date': date,
+        'timeZone': 'America/Phoenix',
       },
       'end': {
-        'dateTime': '2021-05-28T17:00:00-07:00',
-        'timeZone': 'America/Los_Angeles',
-      },
-      'recurrence': [
-        'RRULE:FREQ=DAILY;COUNT=2'
-      ],
-      'attendees': [
-        {'email': 'lpage@example.com'},
-        {'email': 'sbrin@example.com'},
-      ],
-      'reminders': {
-        'useDefault': False,
-        'overrides': [
-          {'method': 'email', 'minutes': 24 * 60},
-          {'method': 'popup', 'minutes': 10},
-        ],
+        'date': date,
+        'timeZone': 'America/Phoenix',
       },
     }
-    # print(getattr(sys.argv[1], "Project_ID"))
-    node = (sys.argv[1])["Project_ID"]
-    print(node)
-    return
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print ('Event created: %s' % (event.get('htmlLink')))
 
+    event = service.events().insert(calendarId='2jgb0mh6sudkn01m0up411h854@group.calendar.google.com', body=event).execute()
+    print ('Event created: %s' % (event.get('htmlLink')))
 
 if __name__ == '__main__':
     main()
