@@ -4,7 +4,6 @@ import pickle
 import os.path
 import sys
 from dateutil import parser
-# os.system("source env/bin/activate")
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -42,7 +41,12 @@ def main():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-    summary = ' '.join(sys.argv[2:])
+    # argv[1] is is the date, everything after goes into summary
+    data = ' '.join(sys.argv[2:])
+    summary = " "
+    for x in data:
+      if (x != ','):
+        summary += x
     print(summary)
 
     date = parser.parse(sys.argv[1]).strftime('%Y-%m-%d')
